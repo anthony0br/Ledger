@@ -63,6 +63,10 @@ type function mut(t: type): type
     for k, v in t:properties() do
         t2:setproperty(k, v.read)
     end
+    local i = t:indexer()
+    if i then
+        t2:setindexer(i.index, i.readresult)
+    end
     return t2
 end
 
@@ -90,7 +94,8 @@ local Store = Ledger.NewTyped<<Profile, Ops>>({
     Default = { Gold = 100, Items = {}, Files = { Message = "" } },
     Reducer = function(state, op)
         local _is_frozen: is_frozen<typeof(state)> 
-        state = clone(state)
+        local nextState = table.clone(state)
+        state = nextState :: mut<typeof(nextState)>
 
         if op.Kind == "SpendGold" then
             if op.Amount > state.Gold then
