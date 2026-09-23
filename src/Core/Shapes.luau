@@ -14,6 +14,10 @@
 		type Op = Shapes.Op
 --]=]
 
+local TypeFunctions = require("./TypeFunctions")
+
+type Frozen<T> = TypeFunctions.Frozen<T>
+
 export type Op = {
 	Id: string,
 	Kind: string,

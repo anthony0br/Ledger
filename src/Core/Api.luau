@@ -32,6 +32,7 @@ type KeyLike = Shapes.KeyLike
 type KeysMode = Shapes.KeysMode
 type Migration = Shapes.Migration
 type Reason = Reasons.Reason
+type Frozen<T> = TypeFunctions.Frozen<T>
 
 export type OpMap = { [string]: { [any]: any } }
 
@@ -135,7 +136,7 @@ export type Config<D> = ConfigCommon<D> & {
 }
 
 export type TypedConfig<D, O> = ConfigCommon<D> & {
-	read Reducer: (State: D, Op: TypeFunctions.OpUnion<O>) -> (D | TypeFunctions.Frozen<D>)?,
+	read Reducer: (State: Frozen<D>, Op: TypeFunctions.OpUnion<O>) -> (D | TypeFunctions.Frozen<D>)?,
 }
 
 type DriftState = { Gold: number }

@@ -15,6 +15,9 @@
 		local Copy = TableUtil.DeepCopy(State)
 --]=]
 
+local TypeFunctions = require("../Core/TypeFunctions")
+type Frozen<T> = TypeFunctions.Frozen<T>
+
 local function Occupied(Value: any): boolean
 	return type(Value) == "table" and next(Value) ~= nil
 end
@@ -56,7 +59,7 @@ local function DeepEqual(Left: any, Right: any): boolean
 	return Held == Count(Right)
 end
 
-local function DeepCopy<T>(Value: T, Seen: { [any]: any }?): T
+local function DeepCopy<T>(Value: T, Seen: { [any]: any }?): Frozen<T>
 	if type(Value) == "buffer" then
 		local Fresh = buffer.create(buffer.len(Value :: any))
 		buffer.copy(Fresh, 0, Value :: any)
@@ -81,7 +84,7 @@ local function DeepCopy<T>(Value: T, Seen: { [any]: any }?): T
 	return Result :: any
 end
 
-local function DeepFreeze<T>(Value: T, Seen: { [any]: boolean }?): T
+local function DeepFreeze<T>(Value: T, Seen: { [any]: boolean }?): Frozen<T>
 	if type(Value) ~= "table" then
 		return Value
 	end
@@ -120,7 +123,7 @@ end
 
 local Ours: { [any]: boolean } = setmetatable({}, { __mode = "k" }) :: any
 
-local function FreezeDelta<T>(Value: T): T
+local function FreezeDelta<T>(Value: T): Frozen<T>
 	if type(Value) ~= "table" or Ours[Value :: any] then
 		return Value
 	end
